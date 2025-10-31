@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentication System Test</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .test-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .test-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border-radius: 12px;
+      background: #f8f9fa;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-left: 1rem;
+    }
+    .status-pass {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status-fail {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .test-button {
+      margin: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-card">
+    <h1 class="text-center mb-4">
+      <i class="fas fa-shield-alt text-primary me-2"></i>
+      Authentication System Test
+    </h1>
+
+    <!-- Test 1: Demo Users -->
+    <div class="test-section">
+      <h4><i class="fas fa-users me-2"></i>Test 1: Demo Users Loaded</h4>
+      <p>Checking if demo accounts exist...</p>
+      <div id="test1Result"></div>
+      <button class="btn btn-primary test-button" onclick="runTest1()">Run Test</button>
+    </div>
+
+    <!-- Test 2: Login Function -->
+    <div class="test-section">
+      <h4><i class="fas fa-sign-in-alt me-2"></i>Test 2: Login Function</h4>
+      <p>Testing admin login...</p>
+      <div id="test2Result"></div>
+      <button class="btn btn-primary test-button" onclick="runTest2()">Run Test</button>
+    </div>
+
+    <!-- Test 3: Session Storage -->
+    <div class="test-section">
+      <h4><i class="fas fa-database me-2"></i>Test 3: Session Storage</h4>
+      <p>Checking localStorage session...</p>
+      <div id="test3Result"></div>
+      <button class="btn btn-primary test-button" onclick="runTest3()">Run Test</button>
+    </div>
+
+    <!-- Test 4: Role Check -->
+    <div class="test-section">
+      <h4><i class="fas fa-user-shield me-2"></i>Test 4: Role-Based Access</h4>
+      <p>Testing admin role detection...</p>
+      <div id="test4Result"></div>
+      <button class="btn btn-primary test-button" onclick="runTest4()">Run Test</button>
+    </div>
+
+    <!-- Test 5: Password Strength -->
+    <div class="test-section">
+      <h4><i class="fas fa-key me-2"></i>Test 5: Password Validation</h4>
+      <p>Testing password strength checker...</p>
+      <div id="test5Result"></div>
+      <button class="btn btn-primary test-button" onclick="runTest5()">Run Test</button>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="text-center mt-4">
+      <h5>Quick Navigation</h5>
+      <a href="login.html" class="btn btn-success m-1">
+        <i class="fas fa-sign-in-alt me-2"></i>Go to Login
+      </a>
+      <a href="register.html" class="btn btn-info m-1">
+        <i class="fas fa-user-plus me-2"></i>Go to Register
+      </a>
+      <a href="dashboard.html" class="btn btn-warning m-1">
+        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+      </a>
+      <a href="admin.html" class="btn btn-danger m-1">
+        <i class="fas fa-shield-alt me-2"></i>Go to Admin Panel
+      </a>
+      <a href="index.html" class="btn btn-secondary m-1">
+        <i class="fas fa-home me-2"></i>Go to Homepage
+      </a>
+    </div>
+
+    <div class="text-center mt-4">
+      <button class="btn btn-danger" onclick="clearAll()">
+        <i class="fas fa-trash me-2"></i>Clear All Data
+      </button>
+      <button class="btn btn-success" onclick="runAllTests()">
+        <i class="fas fa-play me-2"></i>Run All Tests
+      </button>
+    </div>
+  </div>
+
+  <script src="new/auth.js"></script>
+  <script>
+    function showResult(testId, passed, message) {
+      const resultDiv = document.getElementById(`test${testId}Result`);
+      const badge = passed ? 
+        '<span class="status-badge status-pass"><i class="fas fa-check me-1"></i>PASS</span>' :
+        '<span class="status-badge status-fail"><i class="fas fa-times me-1"></i>FAIL</span>';
+      resultDiv.innerHTML = `<p>${message}${badge}</p>`;
+    }
+
+    function runTest1() {
+      // Check if DEMO_USERS exists
+      const hasDemoUsers = typeof DEMO_USERS !== 'undefined' && DEMO_USERS.length > 0;
+      const adminExists = hasDemoUsers && DEMO_USERS.some(u => u.username === 'admin');
+      const userExists = hasDemoUsers && DEMO_USERS.some(u => u.username === 'user');
+      
+      const passed = hasDemoUsers && adminExists && userExists;
+      const message = passed ? 
+        `Found ${DEMO_USERS.length} demo users (admin, user)` :
+        'Demo users not found! Check auth.js';
+      
+      showResult(1, passed, message);
+    }
+
+    function runTest2() {
+      // Clear any existing session
+      localStorage.removeItem('currentUser');
+      
+      // Try to login as admin
+      const testUser = DEMO_USERS.find(u => u.username === 'admin');
+      if (!testUser) {
+        showResult(2, false, 'Admin user not found in DEMO_USERS');
+        return;
+      }
+
+      // Simulate login
+      const session = {
+        userId: testUser.userId,
+        username: testUser.username,
+        email: testUser.email,
+        name: testUser.name,
+        role: testUser.role,
+        avatar: testUser.avatar,
+        loginTime: new Date().toISOString()
+      };
+
+      localStorage.setItem('currentUser', JSON.stringify(session));
+      const saved = localStorage.getItem('currentUser');
+      const passed = saved !== null;
+
+      showResult(2, passed, passed ? 
+        'Login successful! Session saved to localStorage' :
+        'Login failed! Session not saved');
+    }
+
+    function runTest3() {
+      const session = localStorage.getItem('currentUser');
+      if (!session) {
+        showResult(3, false, 'No session found. Run Test 2 first.');
+        return;
+      }
+
+      try {
+        const user = JSON.parse(session);
+        const hasRequiredFields = user.userId && user.username && user.role;
+        showResult(3, hasRequiredFields, 
+          hasRequiredFields ?
+          `Session valid! User: ${user.name} (${user.role})` :
+          'Session invalid! Missing required fields');
+      } catch (e) {
+        showResult(3, false, `Session parsing error: ${e.message}`);
+      }
+    }
+
+    function runTest4() {
+      const user = getCurrentUser();
+      if (!user) {
+        showResult(4, false, 'No user logged in. Run Test 2 first.');
+        return;
+      }
+
+      const isAdmin = user.role === 'admin';
+      showResult(4, isAdmin, 
+        isAdmin ?
+        `Role check passed! User "${user.name}" is an admin` :
+        `User "${user.name}" is a ${user.role}, not admin`);
+    }
+
+    function runTest5() {
+      // Test password strength function
+      const testPasswords = [
+        { password: 'abc', expected: 'weak' },
+        { password: 'Abc123', expected: 'medium' },
+        { password: 'Abc123!@#', expected: 'strong' }
+      ];
+
+      let allPassed = true;
+      let results = [];
+
+      testPasswords.forEach(test => {
+        const strength = checkPasswordStrength(test.password);
+        const passed = strength === test.expected;
+        allPassed = allPassed && passed;
+        results.push(`"${test.password}" → ${strength} (expected: ${test.expected}) ${passed ? '✓' : '✗'}`);
+      });
+
+      showResult(5, allPassed, results.join('<br>'));
+    }
+
+    function clearAll() {
+      if (confirm('Clear all localStorage data? This will logout all users.')) {
+        localStorage.clear();
+        alert('All data cleared!');
+        location.reload();
+      }
+    }
+
+    function runAllTests() {
+      runTest1();
+      setTimeout(() => runTest2(), 500);
+      setTimeout(() => runTest3(), 1000);
+      setTimeout(() => runTest4(), 1500);
+      setTimeout(() => runTest5(), 2000);
+    }
+
+    // Auto-run tests on load
+    window.addEventListener('load', () => {
+      setTimeout(runAllTests, 500);
+    });
+  </script>
+</body>
+</html>

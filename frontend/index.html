@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineReview - Your Ultimate Movie Review Platform</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./new/style.css">
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <i class="fas fa-film me-2"></i>
+        <span class="brand-text">CineReview</span>
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html">
+              <i class="fas fa-home me-1"></i> Home
+            </a>
+          </li>
+          
+          <!-- Auth Links (Show when NOT logged in) -->
+          <li class="nav-item auth-link" id="loginLink">
+            <a class="nav-link" href="login.html">
+              <i class="fas fa-sign-in-alt me-1"></i> Login
+            </a>
+          </li>
+          <li class="nav-item auth-link" id="registerLink">
+            <a class="nav-link" href="register.html">
+              <i class="fas fa-user-plus me-1"></i> Register
+            </a>
+          </li>
+          
+          <!-- User Menu (Show when logged in) -->
+          <li class="nav-item dropdown user-menu" id="userMenu" style="display: none;">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <img src="" alt="User" class="user-avatar-nav" id="navUserAvatar">
+              <span id="navUsername">User</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="dashboard.html">
+                  <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+              </li>
+              <li id="adminPanelLink" style="display: none;">
+                <a class="dropdown-item" href="admin.html">
+                  <i class="fas fa-user-shield me-2"></i>Admin Panel
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="logout()">
+                  <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+          
+          <li class="nav-item">
+            <button class="btn btn-outline-light btn-sm ms-3" id="themeToggle">
+              <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-8 mx-auto text-center">
+          <h1 class="hero-title mb-3">Discover Your Next Favorite Movie</h1>
+          <p class="hero-subtitle mb-4">Explore thousands of movies, read reviews, and share your thoughts</p>
+          
+          <!-- Search Bar -->
+          <div class="search-wrapper">
+            <form id="form" class="search-form">
+              <div class="input-group search-input-group">
+                <span class="input-group-text">
+                  <i class="fas fa-search"></i>
+                </span>
+                <input 
+                  type="search" 
+                  id="query" 
+                  name="q" 
+                  class="form-control" 
+                  placeholder="Search for movies..."
+                  autocomplete="off"
+                >
+                <button class="btn btn-primary" type="submit">Search</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Section -->
+  <section class="filter-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="filter-buttons">
+            <button class="btn filter-btn active" data-filter="popular">
+              <i class="fas fa-fire me-2"></i>Popular
+            </button>
+            <button class="btn filter-btn" data-filter="top_rated">
+              <i class="fas fa-star me-2"></i>Top Rated
+            </button>
+            <button class="btn filter-btn" data-filter="upcoming">
+              <i class="fas fa-calendar me-2"></i>Upcoming
+            </button>
+            <button class="btn filter-btn" data-filter="now_playing">
+              <i class="fas fa-play me-2"></i>Now Playing
+            </button>
+            <button class="btn filter-btn" id="advancedSearchToggle">
+              <i class="fas fa-sliders-h me-2"></i>Advanced
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Advanced Search Panel -->
+      <div class="advanced-search-panel" id="advancedSearchPanel" style="display: none;">
+        <h5 class="mb-3">
+          <i class="fas fa-filter me-2"></i>Advanced Filters
+        </h5>
+        <div class="search-filters">
+          <div class="filter-group">
+            <label for="genreFilter">
+              <i class="fas fa-masks-theater me-2"></i>Genre
+            </label>
+            <select id="genreFilter" class="form-select">
+              <option value="">All Genres</option>
+              <option value="28">Action</option>
+              <option value="12">Adventure</option>
+              <option value="16">Animation</option>
+              <option value="35">Comedy</option>
+              <option value="80">Crime</option>
+              <option value="99">Documentary</option>
+              <option value="18">Drama</option>
+              <option value="10751">Family</option>
+              <option value="14">Fantasy</option>
+              <option value="36">History</option>
+              <option value="27">Horror</option>
+              <option value="10402">Music</option>
+              <option value="9648">Mystery</option>
+              <option value="10749">Romance</option>
+              <option value="878">Science Fiction</option>
+              <option value="10770">TV Movie</option>
+              <option value="53">Thriller</option>
+              <option value="10752">War</option>
+              <option value="37">Western</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="yearFilter">
+              <i class="fas fa-calendar-alt me-2"></i>Release Year
+            </label>
+            <select id="yearFilter" class="form-select">
+              <option value="">All Years</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+              <option value="2021">2021</option>
+              <option value="2020">2020</option>
+              <option value="2019">2019</option>
+              <option value="2018">2018</option>
+              <option value="2017">2017</option>
+              <option value="2016">2016</option>
+              <option value="2015">2015</option>
+              <option value="2010-2014">2010-2014</option>
+              <option value="2000-2009">2000-2009</option>
+              <option value="1990-1999">1990-1999</option>
+              <option value="1980-1989">1980-1989</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="sortBy">
+              <i class="fas fa-sort me-2"></i>Sort By
+            </label>
+            <select id="sortBy" class="form-select">
+              <option value="popularity.desc">Popularity (High to Low)</option>
+              <option value="popularity.asc">Popularity (Low to High)</option>
+              <option value="vote_average.desc">Rating (High to Low)</option>
+              <option value="vote_average.asc">Rating (Low to High)</option>
+              <option value="release_date.desc">Release Date (Newest)</option>
+              <option value="release_date.asc">Release Date (Oldest)</option>
+              <option value="title.asc">Title (A-Z)</option>
+              <option value="title.desc">Title (Z-A)</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="minRating">
+              <i class="fas fa-star-half-alt me-2"></i>Minimum Rating
+            </label>
+            <select id="minRating" class="form-select">
+              <option value="0">Any Rating</option>
+              <option value="7">7+ Stars</option>
+              <option value="8">8+ Stars</option>
+              <option value="9">9+ Stars</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-primary" id="applyFilters">
+            <i class="fas fa-check me-2"></i>Apply Filters
+          </button>
+          <button class="btn btn-secondary" id="resetFilters">
+            <i class="fas fa-redo me-2"></i>Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Movies Section -->
+  <section class="movies-section">
+    <div class="container">
+      <div class="section-header mb-4">
+        <h2 class="section-title">
+          <i class="fas fa-film me-2"></i>
+          <span id="sectionTitle">Popular Movies</span>
+        </h2>
+        <div class="results-count">
+          <span id="resultsCount">Loading...</span>
+        </div>
+      </div>
+      
+      <!-- Loading Spinner -->
+      <div id="loadingSpinner" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      
+      <!-- Movies Grid -->
+      <div id="section" class="row g-4">
+        <!-- Movie cards will be inserted here -->
+      </div>
+      
+      <!-- No Results Message -->
+      <div id="noResults" class="text-center py-5" style="display: none;">
+        <i class="fas fa-film fa-3x text-muted mb-3"></i>
+        <h4>No movies found</h4>
+        <p class="text-muted">Try searching with different keywords</p>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="pagination-container" id="paginationContainer" style="display: none;">
+        <button class="pagination-btn" id="prevBtn">
+          <i class="fas fa-chevron-left me-2"></i>Previous
+        </button>
+        
+        <div class="pagination-info">
+          Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+        </div>
+        
+        <button class="pagination-btn" id="nextBtn">
+          Next<i class="fas fa-chevron-right ms-2"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer mt-5">
+    <div class="container">
+      <div class="row py-4">
+        <div class="col-md-4 mb-3 mb-md-0">
+          <h5 class="footer-heading">
+            <i class="fas fa-film me-2"></i>CineReview
+          </h5>
+          <p class="footer-text">Your ultimate platform for discovering and reviewing movies. Share your thoughts and explore what others think!</p>
+        </div>
+        <div class="col-md-4 mb-3 mb-md-0">
+          <h6 class="footer-heading">Quick Links</h6>
+          <ul class="footer-links">
+            <li><a href="index.html"><i class="fas fa-chevron-right me-2"></i>Home</a></li>
+            <li><a href="login.html"><i class="fas fa-chevron-right me-2"></i>Login</a></li>
+            <li><a href="register.html"><i class="fas fa-chevron-right me-2"></i>Register</a></li>
+            <li><a href="dashboard.html"><i class="fas fa-chevron-right me-2"></i>Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h6 class="footer-heading">Connect With Us</h6>
+          <div class="social-links mb-3">
+            <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p class="footer-text">
+            <i class="fas fa-envelope me-2"></i>contact@cinereview.com<br>
+            <i class="fas fa-phone me-2"></i>+1 (555) 123-4567
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="row">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="mb-0">&copy; 2025 CineReview. All rights reserved.</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <p class="mb-0">Made with <i class="fas fa-heart text-danger"></i> for movie lovers</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTop" class="scroll-to-top" title="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom JavaScript -->
+  <script src="./new/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard - Movie Review Site</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="new/style.css">
+  <link rel="stylesheet" href="new/dashboard.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-film me-2"></i>
+        Movie Review
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">
+              <i class="fas fa-home me-1"></i>Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="dashboard.html">
+              <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+            </a>
+          </li>
+        </ul>
+        
+        <!-- User Menu -->
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <img src="" alt="User" class="user-avatar-small" id="navUserAvatar">
+              <span id="navUsername">User</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="dashboard.html">
+                  <i class="fas fa-user me-2"></i>My Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="logout()">
+                  <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Content -->
+  <div class="dashboard-container">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 col-md-4 sidebar">
+          <div class="user-profile-card">
+            <div class="profile-header">
+              <img src="" alt="User Avatar" class="profile-avatar" id="dashUserAvatar">
+              <h4 id="dashUsername">User Name</h4>
+              <p class="user-role" id="dashUserRole">User</p>
+            </div>
+            <div class="profile-stats">
+              <div class="stat-item">
+                <i class="fas fa-star"></i>
+                <span id="userReviewCount">0</span>
+                <small>Reviews</small>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-heart"></i>
+                <span id="userFavoriteCount">0</span>
+                <small>Favorites</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-menu">
+            <a href="#overview" class="menu-item active" data-section="overview">
+              <i class="fas fa-chart-line me-2"></i>Overview
+            </a>
+            <a href="#my-reviews" class="menu-item" data-section="my-reviews">
+              <i class="fas fa-comments me-2"></i>My Reviews
+            </a>
+            <a href="#favorites" class="menu-item" data-section="favorites">
+              <i class="fas fa-heart me-2"></i>Favorites
+            </a>
+            <a href="#recently-viewed" class="menu-item" data-section="recently-viewed">
+              <i class="fas fa-history me-2"></i>Recently Viewed
+            </a>
+            <a href="#profile" class="menu-item" data-section="profile">
+              <i class="fas fa-user-edit me-2"></i>Edit Profile
+            </a>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9 col-md-8 main-content">
+          <!-- Overview Section -->
+          <div class="content-section active" id="overview-section">
+            <h2 class="section-title">
+              <i class="fas fa-chart-line me-2"></i>Dashboard Overview
+            </h2>
+            
+            <div class="row g-4 mb-4">
+              <div class="col-md-4">
+                <div class="stat-card">
+                  <div class="stat-icon bg-primary">
+                    <i class="fas fa-comments"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3 id="totalReviews">0</h3>
+                    <p>Total Reviews</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stat-card">
+                  <div class="stat-icon bg-danger">
+                    <i class="fas fa-heart"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3 id="totalFavorites">0</h3>
+                    <p>Favorite Movies</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stat-card">
+                  <div class="stat-icon bg-success">
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3 id="avgRating">0.0</h3>
+                    <p>Average Rating</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="activity-card">
+                  <h5>
+                    <i class="fas fa-clock me-2"></i>Recent Activity
+                  </h5>
+                  <div class="activity-list" id="recentActivity">
+                    <p class="text-muted">No recent activity</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="activity-card">
+                  <h5>
+                    <i class="fas fa-trophy me-2"></i>Quick Stats
+                  </h5>
+                  <div class="quick-stats" id="quickStats">
+                    <p class="text-muted">Loading stats...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- My Reviews Section -->
+          <div class="content-section" id="my-reviews-section">
+            <h2 class="section-title">
+              <i class="fas fa-comments me-2"></i>My Reviews
+            </h2>
+            <div class="reviews-list" id="myReviewsList">
+              <p class="text-muted">You haven't written any reviews yet.</p>
+            </div>
+          </div>
+
+          <!-- Favorites Section -->
+          <div class="content-section" id="favorites-section">
+            <h2 class="section-title">
+              <i class="fas fa-heart me-2"></i>Favorite Movies
+            </h2>
+            <div class="row g-4" id="favoritesList">
+              <p class="text-muted">No favorite movies yet.</p>
+            </div>
+          </div>
+
+          <!-- Recently Viewed Section -->
+          <div class="content-section" id="recently-viewed-section">
+            <h2 class="section-title">
+              <i class="fas fa-history me-2"></i>Recently Viewed
+            </h2>
+            <div class="row g-4" id="recentlyViewedList">
+              <p class="text-muted">No recently viewed movies.</p>
+            </div>
+          </div>
+
+          <!-- Edit Profile Section -->
+          <div class="content-section" id="profile-section">
+            <h2 class="section-title">
+              <i class="fas fa-user-edit me-2"></i>Edit Profile
+            </h2>
+            <div class="profile-edit-card">
+              <form id="profileForm">
+                <div class="mb-3">
+                  <label class="form-label">Full Name</label>
+                  <input type="text" class="form-control" id="editName" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" id="editEmail" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Username</label>
+                  <input type="text" class="form-control" id="editUsername" disabled>
+                  <small class="text-muted">Username cannot be changed</small>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-save me-2"></i>Save Changes
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Auth JS -->
+  <script src="new/auth.js"></script>
+  
+  <!-- Dashboard JS -->
+  <script src="new/dashboard.js"></script>
+</body>
+</html>

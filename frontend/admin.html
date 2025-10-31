@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Premium Movie Reviews</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="new/style.css">
+  <link rel="stylesheet" href="new/admin.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-film me-2"></i>Premium Movie Reviews
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">
+              <i class="fas fa-home me-1"></i>Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">
+              <i class="fas fa-user me-1"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="admin.html">
+              <i class="fas fa-shield-alt me-1"></i>Admin Panel
+            </a>
+          </li>
+          <li class="nav-item dropdown" id="userMenu">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+              <img src="https://ui-avatars.com/api/?name=Admin&background=8b5cf6&color=fff" alt="Avatar" class="user-avatar-nav me-2">
+              <span id="navUsername">Admin</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
+              <li><a class="dropdown-item" href="admin.html"><i class="fas fa-shield-alt me-2"></i>Admin Panel</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+              <i class="fas fa-moon"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Admin Panel Container -->
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-profile">
+        <img src="https://ui-avatars.com/api/?name=Admin&background=8b5cf6&color=fff" alt="Admin" class="admin-avatar">
+        <h4 id="adminName">Admin</h4>
+        <p class="admin-role">Administrator</p>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="#" class="admin-nav-item active" data-section="dashboard" onclick="showSection('dashboard')">
+          <i class="fas fa-chart-line"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="admin-nav-item" data-section="users" onclick="showSection('users')">
+          <i class="fas fa-users"></i>
+          <span>Users</span>
+        </a>
+        <a href="#" class="admin-nav-item" data-section="reviews" onclick="showSection('reviews')">
+          <i class="fas fa-star"></i>
+          <span>All Reviews</span>
+        </a>
+        <a href="#" class="admin-nav-item" data-section="movies" onclick="showSection('movies')">
+          <i class="fas fa-film"></i>
+          <span>Movies</span>
+        </a>
+        <a href="#" class="admin-nav-item" data-section="analytics" onclick="showSection('analytics')">
+          <i class="fas fa-chart-pie"></i>
+          <span>Analytics</span>
+        </a>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <button class="btn btn-outline-light btn-sm w-100" onclick="location.href='index.html'">
+          <i class="fas fa-arrow-left me-2"></i>Back to Site
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Dashboard Section -->
+      <section id="dashboard-section" class="admin-section active">
+        <div class="section-header">
+          <h2><i class="fas fa-chart-line me-2"></i>Dashboard Overview</h2>
+          <p class="text-muted">Monitor key metrics and platform activity</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="totalUsers">0</h3>
+              <p>Total Users</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="totalReviews">0</h3>
+              <p>Total Reviews</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-film"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="totalMovies">0</h3>
+              <p>Movies Reviewed</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <i class="fas fa-chart-bar"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="avgRating">0.0</h3>
+              <p>Average Rating</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h4>Reviews by Rating</h4>
+            <canvas id="ratingsChart"></canvas>
+          </div>
+          
+          <div class="chart-card">
+            <h4>User Distribution</h4>
+            <canvas id="usersChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-card">
+          <h4><i class="fas fa-history me-2"></i>Recent Activity</h4>
+          <div id="recentActivity" class="activity-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Users Section -->
+      <section id="users-section" class="admin-section">
+        <div class="section-header">
+          <h2><i class="fas fa-users me-2"></i>User Management</h2>
+          <button class="btn btn-primary" onclick="addNewUser()">
+            <i class="fas fa-plus me-2"></i>Add User
+          </button>
+        </div>
+
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Avatar</th>
+                  <th>Name</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Reviews</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reviews Section -->
+      <section id="reviews-section" class="admin-section">
+        <div class="section-header">
+          <h2><i class="fas fa-star me-2"></i>All Reviews</h2>
+          <div class="filter-group">
+            <select class="form-select" id="reviewFilter" onchange="filterReviews()">
+              <option value="all">All Reviews</option>
+              <option value="5">5 Stars</option>
+              <option value="4">4 Stars</option>
+              <option value="3">3 Stars</option>
+              <option value="2">2 Stars</option>
+              <option value="1">1 Star</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="reviewsContainer" class="reviews-grid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- Movies Section -->
+      <section id="movies-section" class="admin-section">
+        <div class="section-header">
+          <h2><i class="fas fa-film me-2"></i>Movies Overview</h2>
+          <p class="text-muted">Movies with reviews on the platform</p>
+        </div>
+
+        <div id="moviesContainer" class="movies-grid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- Analytics Section -->
+      <section id="analytics-section" class="admin-section">
+        <div class="section-header">
+          <h2><i class="fas fa-chart-pie me-2"></i>Advanced Analytics</h2>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="chart-card">
+            <h4>Review Trends</h4>
+            <canvas id="trendsChart"></canvas>
+          </div>
+
+          <div class="chart-card">
+            <h4>Top Rated Movies</h4>
+            <div id="topMoviesList" class="top-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h4>Most Active Users</h4>
+            <div id="topUsersList" class="top-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h4>Platform Insights</h4>
+            <div class="insights-list">
+              <div class="insight-item">
+                <i class="fas fa-check-circle text-success"></i>
+                <div>
+                  <strong id="insightActiveUsers">0</strong>
+                  <span>Active users this month</span>
+                </div>
+              </div>
+              <div class="insight-item">
+                <i class="fas fa-star text-warning"></i>
+                <div>
+                  <strong id="insightFiveStars">0</strong>
+                  <span>5-star reviews</span>
+                </div>
+              </div>
+              <div class="insight-item">
+                <i class="fas fa-chart-line text-info"></i>
+                <div>
+                  <strong id="insightAvgPerUser">0.0</strong>
+                  <span>Avg reviews per user</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom Scripts -->
+  <script src="new/auth.js"></script>
+  <script src="new/admin.js"></script>
+</body>
+</html>
